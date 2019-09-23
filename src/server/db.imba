@@ -1,3 +1,5 @@
+require('dotenv').config
+
 const uuid = require 'uuid/v4'
 const Sequelize = require 'sequelize'
 const mysql = require 'mysql2'

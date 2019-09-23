@@ -18,6 +18,7 @@
     "express-session": "^1.16.2",
     "imba": "^1.4.0",
     "jsonwebtoken": "^8.5.1",
+    "mosca": "^2.8.3",
     "ms": "^2.1.2",
     "mysql2": "^1.6.5",
     "sequelize": "^5.8.12",

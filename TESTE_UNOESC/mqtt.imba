@@ -16,9 +16,8 @@ server.on('ready', &) do
     console.log("MQTT Server running on {IP}:{PORT}")
 
 # publisher.on('connect', &) do 
-#     setInterval(&, 5000) do
-#         publisher.publish('ccdc', 'Hello mqtt')
-#         console.log('Message Sent')
+#     publisher.publish('largada', 'Hello mqtt')
+#     console.log('Message Sent')
 
 subscriber.on('connect', &) do
     subscriber.subscribe('largada')
@@ -32,7 +31,10 @@ subscriber.on('connect', &) do
     subscriber.subscribe('chegada')
 
 subscriber.on('message', &) do |topic, message|
-    # message.toString()
-    prova.detecta(topic)
-    console.log(topic, message.toString)
-    prova.resultados
+    unless prova.chegada[0]
+        # message.toString()
+        prova.detecta(topic)
+        console.log(topic, message.toString)
+        prova.resultados
+        if topic == "chegada"
+            console.log prova.tempo

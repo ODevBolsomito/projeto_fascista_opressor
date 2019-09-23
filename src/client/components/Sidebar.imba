@@ -57,3 +57,4 @@ export tag Sidebar
                             <a :tap=(do change_page(:competicoes))>
                                 <i .zmdi .zmdi-local-bar>
                                 " Competições"
+                                
