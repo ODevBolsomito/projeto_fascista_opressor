@@ -1,9 +1,9 @@
 require('dotenv').config
 
-const express = require 'express'
-const cors    = require 'cors'
-const bcrypt  = require 'bcryptjs'
-const jwt     = require 'jsonwebtoken'
+const express = require('express')
+const cors    = require('cors')
+const bcrypt  = require('bcryptjs')
+const jwt     = require('jsonwebtoken')
 
 import User, Equipe, Competicao, Resultado from './db'
 
@@ -16,6 +16,13 @@ server.use cors
     exposedHeaders: 'Access-Token'
 
 server.use express.json
+
+server.use "*", do |req, resp, next|
+    console.log("\n\n")
+    console.log(:params, req:params)
+    console.log("\n")
+    console.log(:body, req:body)
+    next()
 
 # LOGIN
 server.post('/login') do |req, res|
@@ -43,32 +50,39 @@ server.post('/signup') do |req, res|
     return res.json {success: 'signup'}
 
 
+# ROUTERS
+var routeCompeticoes = express.Router();
+var routeEquipes = express.Router({mergeParams: true});
+var routeResultados = express.Router({mergeParams: true});
+
+
 # COMPETICOES
-server.get('/competicoes') do |req, res|
+
+routeCompeticoes.get('/') do |req, res|
     let userId = jwt.verify(req:headers:accesstoken, process:env:SECRET):userId
     return res.sendStatus 401 unless userId
     let competicoes = await Competicao.findAll(where: {userId: userId})
     return res.json competicoes.map do |competicao| competicao:dataValues
 
-server.post('/competicoes') do |req, res|
+routeCompeticoes.post('/') do |req, res|
     let userId = jwt.verify(req:headers:accesstoken, process:env:SECRET):userId
     return res.sendStatus 401 unless userId
-    let params = req:body:competicao
+    let params = req:body
     params:userId = userId
     let competicao = await Competicao.create(params)
     return res.json competicao:dataValues
 
-server.put('/competicoes/:id') do |req, res|
+routeCompeticoes.put('/:id') do |req, res|
     let userId = jwt.verify(req:headers:accesstoken, process:env:SECRET):userId
     return res.sendStatus 401 unless userId
-    let params = req:body:competicao
+    let params = req:body
     let update = await Competicao.update(params, where: {id: req:params:id, userId: userId})
     if update:dataValues
         return res.json update:dataValues
     else
         return res.json update:errors
 
-server.delete('/competicoes/:id') do |req, res|
+routeCompeticoes.delete('/:id') do |req, res|
     let userId = jwt.verify(req:headers:accesstoken, process:env:SECRET):userId
     return res.sendStatus 401 unless userId
     let destroy = await Competicao.destroy(where: {id: req:params:id, userId: userId})
@@ -77,21 +91,26 @@ server.delete('/competicoes/:id') do |req, res|
     else
         return res.json destroy:errors
 
+routeCompeticoes.use('/:competicaoId/equipes', routeEquipes);
+routeCompeticoes.use('/:competicaoId/resultados', routeResultados);
+
 
 # EQUIPES
-server.get('/equipes') do |req, res|
+routeEquipes.get('/') do |req, res|
     let userId = jwt.verify(req:headers:accesstoken, process:env:SECRET):userId
     return res.sendStatus 401 unless userId
-    let equipes = await Equipe.findAll
+    let equipes = await Equipe.findAll(where: {competicaoId: req:params:competicaoId})
     return res.json equipes.map do |equipe| equipe:dataValues
 
-server.post('/equipes') do |req, res|
+routeEquipes.post('/') do |req, res|
     let userId = jwt.verify(req:headers:accesstoken, process:env:SECRET):userId
     return res.sendStatus 401 unless userId
-    let equipe = await Equipe.create(req:body:equipe)
+    let params = req:body
+    params:competicaoId = req:params:competicaoId
+    let equipe = await Equipe.create(params)
     return res.json equipe:dataValues
 
-server.put('/equipes/:id') do |req, res|
+routeEquipes.put('/:id') do |req, res|
     let userId = jwt.verify(req:headers:accesstoken, process:env:SECRET):userId
     return res.sendStatus 401 unless userId
     let params = req:body:equipe
@@ -101,7 +120,7 @@ server.put('/equipes/:id') do |req, res|
     else
         return res.json update:errors
 
-server.delete('/equipes/:id') do |req, res|
+routeEquipes.delete('/:id') do |req, res|
     let userId = jwt.verify(req:headers:accesstoken, process:env:SECRET):userId
     return res.sendStatus 401 unless userId
     let destroy = await Equipe.destroy(where: {id: req:params:id})
@@ -112,32 +131,21 @@ server.delete('/equipes/:id') do |req, res|
 
 
 # RESULTADOS
-server.get('/resultados') do |req, res|
+routeResultados.get('/') do |req, res|
     let userId = jwt.verify(req:headers:accesstoken, process:env:SECRET):userId
     return res.sendStatus 401 unless userId
-    let resultados = await Resultado.findAll
+    let resultados = await Resultado.findAll(where: {competicaoId: req:params:competicaoId})
     return res.json resultados.map do |resultado| resultado:dataValues
 
-server.post('/resultados') do |req, res|
+routeResultados.post('/') do |req, res|
     let userId = jwt.verify(req:headers:accesstoken, process:env:SECRET):userId
     return res.sendStatus 401 unless userId
-    console.log "\n\n\n"
-    console.log req:body
-    console.log "\n\n\n"
-    let resultado = await Resultado.create(req:body:resultado)
+    let params = req:body
+    params:competicaoId = req:params:competicaoId
+    let resultado = await Resultado.create(req:body)
     return res.json resultado:dataValues
 
-# server.put('/resultados/:id') do |req, res|
-#     let userId = jwt.verify(req:headers:accesstoken, process:env:SECRET):userId
-#     return res.sendStatus 401 unless userId
-#     let params = req:body:resultado
-#     let update = await Resultado.update(params, where: {id: req:params:id})
-#     if update:dataValues
-#         return res.json update:dataValues
-#     else
-#         return res.json update:errors
-
-server.delete('/resultados/:id') do |req, res|
+routeResultados.delete('/:id') do |req, res|
     let userId = jwt.verify(req:headers:accesstoken, process:env:SECRET):userId
     return res.sendStatus 401 unless userId
     let destroy = await Resultado.destroy(where: {id: req:params:id})
@@ -147,6 +155,7 @@ server.delete('/resultados/:id') do |req, res|
         return res.json destroy:errors
 
 
+server.use('/competicoes', routeCompeticoes)
 
 server.listen(process:env.PORT) do
     console.log 'server is running on port ' + process:env.PORT

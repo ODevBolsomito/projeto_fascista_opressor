@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack-dev-server --content-base dist/ & imba src/server/http.imba",
+    "client": "webpack-dev-server --content-base dist/",
+    "server": "imba src/server/http.imba",
+    "mqtt": "imba src/server/mqtt.imba",
     "build": "webpack"
   },
   "author": "",

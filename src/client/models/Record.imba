@@ -22,7 +22,7 @@ export class Record
                 Access-Token: window:sessionStorage.getItem('token')
 
         for data in res:data
-            let rec = self.new data
+            self.new data
 
     def self.create data
         let res = await axios
@@ -35,12 +35,10 @@ export class Record
 
 
     def update
-        let data = {}
-        data[self:constructor:name.toLowerCase] = self
         let res = await axios
             url: "http://localhost:9000/{@collection}/{self:id}"
             method: 'PUT'
-            data: data
+            data: self
             headers: 
                 Access-Token: window:sessionStorage.getItem('token')
         return res
@@ -59,12 +57,10 @@ export class Record
         if self:id
             res = await update
         else
-            let data = {}
-            data[self:constructor:name.toLowerCase] = self
             res = await axios
                 url: "http://localhost:9000/{@collection}"
                 method: 'POST'
-                data: data
+                data: self
                 headers: 
                     Access-Token: window:sessionStorage.getItem('token')
         return res

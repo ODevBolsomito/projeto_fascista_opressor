@@ -10,14 +10,10 @@ var prova = Prova.new
 var server = Server.new(port: PORT)
 
 var subscriber = mqtt.connect("mqtt://{IP}")
-# var publisher = mqtt.connect('"mqtt://{IP}")
+var publisher = mqtt.connect("mqtt://{IP}")
 
 server.on('ready', &) do
     console.log("MQTT Server running on {IP}:{PORT}")
-
-# publisher.on('connect', &) do 
-#     publisher.publish('largada', 'Hello mqtt')
-#     console.log('Message Sent')
 
 subscriber.on('connect', &) do
     subscriber.subscribe('largada')
@@ -38,3 +34,7 @@ subscriber.on('message', &) do |topic, message|
         prova.resultados
         if topic == "chegada"
             console.log prova.tempo
+
+publisher.on('connect', &) do 
+    publisher.publish('largada', 'Hello mqtt')
+    console.log('Message Sent')

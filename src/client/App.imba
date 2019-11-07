@@ -4,7 +4,7 @@ import Login         from './pages/Login'
 import Signup        from './pages/Signup'
 import Competicoes   from './pages/Competicoes'
 
-import Placar   from './pages/Placar'
+import Resultados   from './pages/Resultados'
 import Equipes   from './pages/Equipes'
 
 import Sidebar from './components/Sidebar'
@@ -48,7 +48,7 @@ tag App
                     <Header :toggle_sidebar=(do @sidebar = not @sidebar)>
                     <Sidebar :close=(do @sidebar = false) toggle=@sidebar>
                     <section .content>
-                        <Placar>  if ['#/', '#/placar'].includes window:location:hash
+                        <Resultados>  if ['#/', '#/placar'].includes window:location:hash
                         <Equipes> if ['#/equipes'].includes window:location:hash
             
 Imba.mount <App>

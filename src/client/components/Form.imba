@@ -36,7 +36,7 @@ export tag Form
                         <div .modal-body>
                             <div .card>
                                 <div .card-body>
-                                    <form>
+                                    <form :submit.prevent>
                                         for own col_name, col_config of model.inputs
                                             <div .form-row>
                                                 <div .col>

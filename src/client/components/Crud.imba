@@ -25,9 +25,7 @@ export tag Crud
 
     def actionEdit record
         target = record
-
-    def select rec
-        trigger :select, rec
+        sync
 
     def render
         <self>
@@ -63,7 +61,7 @@ export tag Crud
                                                     <a .zmdi .zmdi-edit>
                                         <tbody>
                                             for record in records
-                                                <tr :tap=(do select(record)) .main_table_tr>
+                                                <tr .main_table_tr>
                                                     for own field, config of model.fields
                                                         let cell = null
                                                         if config:foreign_key
@@ -75,7 +73,7 @@ export tag Crud
                                                                 cell = (do try return formatDateTime(record[field]))()
                                                             else
                                                                 cell = (do try return record[field])()
-                                                        <td style="min-width: {cell and cell:length * 13}px">
+                                                        <td :tap.trigger(:select, record) style="min-width: {cell and cell:length * 13}px">
                                                             cell
                                                     <td .table-action .table-action-destroy  title="Excluir" :tap=(do actionDestroy record)>
                                                         <a .zmdi .zmdi-delete>

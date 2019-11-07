@@ -1,37 +1,69 @@
-import Record from './Record'
+const axios = require('axios')
 
+import Record from './Record'
 import Equipe from './Equipe'
+import State from '../State'
 
 export class Resultado < Record
     collection :resultados
 
     fields
-        largada:   {type: :DateTime, human_name: 'Largada'   }
-        letra:     {type: :String,   human_name: 'Letra'     }
-        missao_1:  {type: :Integer,  human_name: 'Missao 1'  }
-        missao_2:  {type: :Integer,  human_name: 'Missao 2'  }
-        missao_3:  {type: :Integer,  human_name: 'Missao 3'  }
-        chegada:   {type: :DateTime, human_name: 'Chegada'   }
-        equipe:
-            type: Equipe,  
-            foreign_key: :equipeId  
-            name: :nome  
-            human_name: 'Equipe'
+        equipeId: { type: :Integer,  human_name: 'EquipeId' }
+        largada:  { type: :DateTime, human_name: 'Largada'  }
+        arco1:    { type: :Integer,  human_name: 'Arco 1'   }
+        arco2:    { type: :Integer,  human_name: 'Arco 2'   }
+        placa1:   { type: :Integer,  human_name: 'Placa 1'  }
+        placa2:   { type: :DateTime, human_name: 'Placa 2'  }
+        golf:     { type: :DateTime, human_name: 'Golf'     }
+        chegada:  { type: :DateTime, human_name: 'Chegada'  }
 
-    inputs 
-        equipe:
-            type: Equipe,  
-            foreign_key: :equipeId  
-            name: :nome  
-            human_name: 'Equipe'
+    def self.all
+        let res = await axios
+            url: "http://localhost:9000/competicoes/{State:competicao:id}/resultados"
+            method: 'GET'
+            headers: 
+                Access-Token: window:sessionStorage.getItem('token')
 
-    def self.placar_fields
-        return ({
-            missao_1:  {type: :Integer,  human_name: 'Bamboles'  }
-            missao_2:  {type: :Integer,  human_name: 'Bola'  }
-            missao_3:  {type: :Integer,  human_name: 'Placa'  }
-            tempo:   {type: :DateTime, human_name: 'Tempo'   }
-        })
+        for data in res:data
+            self.new data
 
-    def tempo 
-        console.log ('123 tempo 123')
+    def self.create data
+        let res = await axios
+            url: "http://localhost:9000/competicoes/{State:competicao:id}/resultados"
+            method: 'POST'
+            data: data
+            headers: 
+                Access-Token: window:sessionStorage.getItem('token')
+        self.new res:data
+
+    def update
+        let data = {}
+        data[self:constructor:name.toLowerCase] = self
+        let res = await axios
+            url: "http://localhost:9000/competicoes/{State:competicao:id}/resultados/{self:id}"
+            method: 'PUT'
+            data: data
+            headers: 
+                Access-Token: window:sessionStorage.getItem('token')
+        return res
+
+    def destroy
+        let res = await axios
+            url: "http://localhost:9000/competicoes/{State:competicao:id}/resultados/{self:id}"
+            method: 'DELETE'
+            headers: 
+                Access-Token: window:sessionStorage.getItem('token')
+        return res
+
+    def save
+        let res
+        if self:id
+            res = await update
+        else
+            res = await axios
+                url: "http://localhost:9000/competicoes/{State:competicao:id}/resultados"
+                method: 'POST'
+                data: self
+                headers: 
+                    Access-Token: window:sessionStorage.getItem('token')
+        return res

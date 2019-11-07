@@ -56,13 +56,12 @@ tag List
         <h1>
           "Selecione uma competições"
       <Crud 
-        model=Competicao 
+        model=Competicao
         :select=(do |e| selecionaCompeticao(e.data))
       >
 
 
 tag Form
-
   def create
     State:competicao = await Competicao.create
         competicao:
@@ -91,7 +90,7 @@ tag Form
                         <div .form-row>
                             <div .col>
                                 <div .form-group>
-                                    <input[@nome] .form-control .form-control-lg placeholder='nome'>
+                                    <input[@nome] :keydown.esc.trigger(:close) autofocus .form-control .form-control-lg placeholder='nome'>
 
                     <div .modal-footer>
                         <button type="button" .btn .btn-link :tap.create>

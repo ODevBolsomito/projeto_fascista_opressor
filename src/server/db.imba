@@ -24,62 +24,29 @@ const sequelize = Sequelize.new
         port: process:env:DB_PORT
 
 export var User = sequelize.define 'users',
-    id:
-        allowNull: false
-        primaryKey: true
-        type: Sequelize.UUID
-        defaultValue: do uuid()
-    email: 
-        type: Sequelize.STRING
-        unique: true
-        allowNull: false
-    nome:
-        type: Sequelize.STRING
-        allowNull: false
-    encrypted_password:
-        type: Sequelize.STRING
-        allowNull: false
-
-export var Equipe = sequelize.define 'equipes',
-    nome:
-        type: Sequelize.STRING
-        unique: true
-        allowNull: false
-
-export var Resultado = sequelize.define 'resultados',
-    letra: 
-        type: Sequelize.STRING
-    largada: 
-        type: Sequelize.DATE(6)
-        allowNull: true
-    missao_1:
-        type: Sequelize.INTEGER
-        allowNull: true
-    missao_2:
-        type: Sequelize.INTEGER
-        allowNull: true
-    missao_3:
-        type: Sequelize.INTEGER
-        allowNull: true
-    chegada: 
-        type: Sequelize.DATE(6)
-        allowNull: true
+    id:                 { type: Sequelize.UUID, allowNull: false, primaryKey: true, defaultValue: do uuid()}
+    email:              { type: Sequelize.STRING, unique: true, allowNull: false}
+    nome:               { type: Sequelize.STRING, allowNull: false }
+    encrypted_password: { type: Sequelize.STRING, allowNull: false }
 
 export var Competicao = sequelize.define 'competicoes',
-    nome:
-        type: Sequelize.STRING
-        unique: true
-        allowNull: false
+    nome:   { type: Sequelize.STRING, unique: true, allowNull: false}
+    userId: { type: Sequelize.UUID, allowNull: false, references: {model: 'users', key: 'id'} }
 
-User.hasMany(Competicao)
+export var Equipe = sequelize.define 'equipes',
+    nome:         { type: Sequelize.STRING, unique: true, allowNull: false }
+    competicaoId: { type: Sequelize.INTEGER, allowNull: false, references: {model:'competicoes', key: 'id' }}
 
-Competicao.hasMany(Equipe)
-Competicao.hasMany(Resultado)
-
-Equipe.belongsTo(Competicao)
-Equipe.hasMany(Resultado)
-
-Resultado.belongsTo(Equipe)
+export var Resultado = sequelize.define 'resultados',
+    largada: { type: Sequelize.DATE(6), allowNull: true }
+    arco1:   { type: Sequelize.INTEGER, allowNull: true }
+    arco2:   { type: Sequelize.INTEGER, allowNull: true }
+    placa1:  { type: Sequelize.INTEGER, allowNull: true }
+    placa2:  { type: Sequelize.INTEGER, allowNull: true }
+    golf:    { type: Sequelize.INTEGER, allowNull: true }
+    chegada: { type: Sequelize.DATE(6), allowNull: true }
+    equipeId:     { type: Sequelize.INTEGER, allowNull: false, references: {model:'equipes',     key: 'id' }}
+    competicaoId: { type: Sequelize.INTEGER, allowNull: false, references: {model:'competicoes', key: 'id' }}
 
 await sequelize.sync
     .then do 
