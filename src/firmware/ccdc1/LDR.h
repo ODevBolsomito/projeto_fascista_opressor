@@ -1,7 +1,9 @@
+#define DEBUG 0
+
 class LDR {
 	private:
 		int pin;
-		bool acionou;
+		bool enable;
 	public:
 		LDR(int _pin) : pin(_pin){}
 		void setup();
@@ -10,16 +12,16 @@ class LDR {
 
 void LDR::setup(){
 	pinMode(pin, INPUT);
-	acionou = false;
+	enable = true;
 }
 
 bool LDR::derrubada(){
-	if (acionou) return false;
+	if (!enable) return false;
 
 	int val = analogRead(pin);
-	// Serial.println(val);
-	if (val > 800){
-		acionou = true;
+	if(DEBUG) Serial.println(val);
+	if (val > 1020){
+		enable = false;
 		return true;
 	}
 	return false;

@@ -1,6 +1,5 @@
-#define PAUSE_TIME 1000
 #define DISTANCE 15
-#define DEBUG 1
+#define DEBUG 0
 
 class Ultrassonico {
     public:
@@ -13,15 +12,15 @@ class Ultrassonico {
         bool detected();
 
     private:
+        bool enable;
         int trigger;
         int echo;
-        unsigned long pause_time;
 };
 
 void Ultrassonico::setup(){
     pinMode(trigger, OUTPUT);
     pinMode(echo, INPUT);
-    pause_time = millis();
+    enable = true;
 }
 
 bool Ultrassonico::detected() {
@@ -30,12 +29,12 @@ bool Ultrassonico::detected() {
     digitalWrite(trigger, HIGH);
     delayMicroseconds(10);
     digitalWrite(trigger, LOW);
-    float distance = pulseIn(echo, HIGH);
+    float distance = pulseIn(echo, HIGH) / 55.2466;
     if(DEBUG) Serial.print(trigger);
     if(DEBUG) Serial.print(" - ");
     if(DEBUG) Serial.println(distance);
-    if(distance && distance <= DISTANCE && millis() - pause_time > PAUSE_TIME){
-        pause_time = millis();
+    if(distance && distance <= DISTANCE && enable){
+        enable = false;
         return true;
     } else {
         return false;

@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "client": "webpack-dev-server --content-base dist/",
-    "server": "imba src/server/http.imba",
-    "mqtt": "imba src/server/mqtt.imba",
+    "server": "node build/server/http.js",
+    "mqtt": "node build/server/mqtt.js",
     "start": "webpack-dev-server --content-base dist/ & imba src/server/http.imba & imba src/server/mqtt.imba",
     "build": "webpack"
   },

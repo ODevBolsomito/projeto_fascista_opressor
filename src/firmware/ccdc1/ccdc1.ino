@@ -4,33 +4,42 @@
 #include "Plataforma.h"
 #include "LDR.h"
 
-const char* ssid = "TESTE";
-const char* password = "123123as";
-const char* mqtt_server = "192.168.137.1";
+const char* ssid = "HAKA FUNDOS";
+const char* password = "951321as";
+const char* mqtt_server = "192.168.0.19";
 
-Ultrassonico ultra1(D0, D1);
-// Ultrassonico ultra2(D2, D3);
-// Ultrassonico ultra3(D4, D5);
-Plataforma plataforma(D7);
+Ultrassonico arco1(D1, D2);
+// Ultrassonico arco2(D3, D4);
+// Ultrassonico golf(D1, D2);
+Plataforma plataforma(D0);
 LDR placa1(A0);
-// LDR placa1(D8);
+// LDR placa2(A0);
 MqttClient mqtt(ssid, password, mqtt_server);
 
 void setup() {
   Serial.begin(74880);
-  ultra1.setup();
-  // ultra2.setup();
-  // ultra3.setup();
+  arco1.setup();
+  // arco2.setup();
+  // golf.setup();
   plataforma.setup();
   placa1.setup();
+  // placa2.setup();
   mqtt.setup();
 }
 
 void loop() {
-  if(ultra1.detected())   mqtt.publish("arco1");
-  // if(ultra2.detected())   mqtt.publish("arco2");
-  // if(ultra3.detected())   mqtt.publish("golf");
+  if(arco1.detected())   mqtt.publish("arco1");
+  // if(arco2.detected())   mqtt.publish("arco2");
+  // if(golf.detected())   mqtt.publish("golf");
   if(placa1.derrubada())  mqtt.publish("placa1");
-  if(plataforma.largou()) mqtt.publish("largada");
   if(plataforma.chegou()) mqtt.publish("chegada");
+  if(plataforma.largou()) {
+    placa1.setup();
+    arco1.setup();
+    mqtt.publish("largada"); // COMENTAR NO CCDC2
+    // arco2.setup();
+    // golf.setup();
+    // placa2.setup();
+
+  }
 }
