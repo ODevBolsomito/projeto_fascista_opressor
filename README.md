@@ -9,14 +9,23 @@ sudo service mysql start
 systemctl enable mysql
 ```
 
-##### Download do repositório
-```git clone https://github.com/EduardoFRRZ/EngComp_TCC_v1.git```
+##### Download e instalação
+```git clone https://github.com/ODevBolsomito/projeto_fascista_opressor.git ccdc```
+```cd ccdc```
+```yarn```
+```sudo service mysql start```
 
-##### Instalação de dependecias do repositório (express, sequelize, etc.)
-```
-cd EngComp_TCC_v1
-yarn
-```
+```yarn client```
+```yarn server```
+```yarn mqtt```
+ou
+```yarn start```
 
-##### Inicia o servidor web(express) e a conexão com o banco de dados(sequelize)
-```yarn dev```
+em build/ está o codigo JS compilado
+
+No src/firmware está o codigo da nodemcu
+É necessário alterar a configuração da rede
+
+ssid
+password
+mqtt_server

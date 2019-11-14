@@ -7,7 +7,7 @@
     "client": "webpack-dev-server --content-base dist/",
     "server": "node build/server/http.js",
     "mqtt": "node build/server/mqtt.js",
-    "start": "webpack-dev-server --content-base dist/ & imba src/server/http.imba & imba src/server/mqtt.imba",
+    "start": "webpack-dev-server --content-base dist/ & node build/server/http.js & node build/server/mqtt.js",
     "build": "webpack"
   },
   "author": "",
