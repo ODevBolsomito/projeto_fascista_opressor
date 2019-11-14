@@ -1,6 +1,6 @@
 #define PAUSE_TIME 1000
 #define DISTANCE 15
-#define DEBUG 0
+#define DEBUG 1
 
 class Ultrassonico {
     public:
@@ -30,7 +30,7 @@ bool Ultrassonico::detected() {
     digitalWrite(trigger, HIGH);
     delayMicroseconds(10);
     digitalWrite(trigger, LOW);
-    float distance = pulseIn(echo, HIGH) / 27.6233 / 2.0;
+    float distance = pulseIn(echo, HIGH);
     if(DEBUG) Serial.print(trigger);
     if(DEBUG) Serial.print(" - ");
     if(DEBUG) Serial.println(distance);

@@ -19,12 +19,18 @@ subscriber.on('connect', &) do
     subscriber.subscribe('chegada')
 
 subscriber.on('message', &) do |topic, message|
-    let resultado = await Resultado.findOne({
-        where: {chegada: null}, 
-        order: [[ 'createdAt', 'DESC' ]]
-    })
-    return unless resultado
-    let params = {}
-    params[topic] = 1
-    Resultado.update(params, where: {id: resultado:dataValues:id})
-    console.log(topic, message.toString)
+    try
+        console.log(topic, message.toString)
+
+        let resultado = await Resultado.findOne({
+            where: {chegada: null}, 
+            order: [[ 'createdAt', 'DESC' ]]
+        })
+        return unless resultado
+
+        let params = {}
+        params[topic] = message.toString
+        Resultado.update(params, where: {id: resultado:dataValues:id})
+        console.log(topic, message.toString)
+    catch err
+        console.log(err)

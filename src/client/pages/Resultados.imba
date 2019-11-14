@@ -3,6 +3,12 @@ import Equipe from '../models/Equipe'
 import Select from '../components/Select'
 import State from '../State'
 
+
+var mili_sec = {
+    mili: 0
+    sec: 0
+}
+
 export tag Resultados
     prop equipes
     prop equipe_selecionada
@@ -53,18 +59,19 @@ tag Tabela
     prop resultados
     prop equipes
     prop loading
+    prop counter
+
+    prop show_counter
 
     def mount
-        schedule interval: 600
         resultados = (await Resultado.all).filter(|r| r:competicaoId = State:competicao:id)
+        Imba.setInterval(600, &) do
+            resultados = (await Resultado.all).filter(|r| r:competicaoId = State:competicao:id)
         render
 
-    def tick
-        resultados = (await Resultado.all).filter(|r| r:competicaoId = State:competicao:id)
-        render
 
     def equipeFrom res
-        equipes.find do |e|
+        (equipes or []).find do |e|
             e:id == res:equipeId
 
 
@@ -77,7 +84,20 @@ tag Tabela
 
 
     def tempoFrom res
-        res:largada
+        if res:largada and res:chegada
+            let chegada = JSON.parse(res:chegada)
+            let largada = JSON.parse(res:largada)
+            return "{(chegada - largada) / 1000}"
+            
+
+        elif res:largada
+            unless show_counter
+                counter = <Counter>
+                show_counter=true
+            return counter
+        else
+            "0.000"
+
 
     def render
         <self .table-responsive>
@@ -95,14 +115,34 @@ tag Tabela
                                         "Tempo"
                                     <th>
                             <tbody>
-                                for res in resultados
+                                for res, i in resultados
                                     <tr .main_table_tr>
                                         <td>
-                                            equipeFrom(res):nome
+                                            (equipeFrom(res) or {}):nome
                                         <td>
                                             pontuacaoFrom(res)
                                         <td>
                                             tempoFrom(res)
 
+
                                         <td .table-action-destroy title='Cancelar' :tap=(do (res).destroy)>
                                             <i .zmdi .zmdi-hc-1x .zmdi-delete>
+
+tag Counter
+    def mount
+        schedule interval: 10
+        mili_sec = {
+            sec: 0
+            mili: 0
+        }
+
+    def tick
+        mili_sec:mili+=10
+        if mili_sec:mili > 999
+            mili_sec:sec++
+            mili_sec:mili = 0
+        render
+
+    def render
+        <self>
+            "{mili_sec:sec}.{mili_sec:mili}"

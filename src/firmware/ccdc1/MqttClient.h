@@ -13,6 +13,8 @@ class MqttClient {
     WiFiClient espClient;
     PubSubClient client;
 
+    void setup_wifi();
+    void reconnect();
   public:
     MqttClient(
       const char* _ssid, 
@@ -22,8 +24,6 @@ class MqttClient {
                                   mqtt_server(_mqtt_server),
                                   client(espClient) {}
 
-    void setup_wifi();
-    void reconnect();
     void setup();
     void publish(const char* topic);
 };
@@ -87,6 +87,10 @@ void MqttClient::publish(const char* topic) {
     reconnect();
   
   Serial.println(topic);
-  const char* msg = "1";
+
+  char buf[20];
+  int milisec = millis();
+  sprintf(buf,"%d",milisec); 
+  const char* msg = buf;
   client.publish(topic, msg);
 }

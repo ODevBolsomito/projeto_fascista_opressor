@@ -5,6 +5,6 @@ var mqtt = require('mqtt')
 
 var publisher = mqtt.connect("mqtt://{IP}")
 
-publisher.on('connect', &) do 
-    console.log('ccdc', 'Hello mqtt')
-    publisher.publish('largada', JSON.stringify(Date.now))
+# publisher.on('connect', &) do
+
+publisher.publish('largada', JSON.stringify(process.hrtime()))

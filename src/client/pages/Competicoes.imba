@@ -64,8 +64,7 @@ tag List
 tag Form
   def create
     State:competicao = await Competicao.create
-        competicao:
-            nome: @nome
+      nome: @nome
     window:sessionStorage.setItem('competicao', JSON.stringify(State:competicao))
     window:location.assign '#/equipes'
 

@@ -38,13 +38,13 @@ export var Equipe = sequelize.define 'equipes',
     competicaoId: { type: Sequelize.INTEGER, allowNull: false, references: {model:'competicoes', key: 'id' }}
 
 export var Resultado = sequelize.define 'resultados',
-    largada: { type: Sequelize.DATE(6), allowNull: true }
-    arco1:   { type: Sequelize.INTEGER, allowNull: true }
-    arco2:   { type: Sequelize.INTEGER, allowNull: true }
-    placa1:  { type: Sequelize.INTEGER, allowNull: true }
-    placa2:  { type: Sequelize.INTEGER, allowNull: true }
-    golf:    { type: Sequelize.INTEGER, allowNull: true }
-    chegada: { type: Sequelize.DATE(6), allowNull: true }
+    largada: { type: Sequelize.STRING, allowNull: true }
+    arco1:   { type: Sequelize.STRING, allowNull: true }
+    arco2:   { type: Sequelize.STRING, allowNull: true }
+    placa1:  { type: Sequelize.STRING, allowNull: true }
+    placa2:  { type: Sequelize.STRING, allowNull: true }
+    golf:    { type: Sequelize.STRING, allowNull: true }
+    chegada: { type: Sequelize.STRING, allowNull: true }
     equipeId:     { type: Sequelize.INTEGER, allowNull: false, references: {model:'equipes',     key: 'id' }}
     competicaoId: { type: Sequelize.INTEGER, allowNull: false, references: {model:'competicoes', key: 'id' }}
 

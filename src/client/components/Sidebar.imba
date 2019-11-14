@@ -4,7 +4,9 @@ export tag Sidebar
 
     prop toggle
     prop user_actions
-    prop current_page default: :dashboard
+
+    def mount
+        window:onchangehash = do render
 
     def toogle_user_actions
         user_actions = !user_actions
@@ -15,14 +17,12 @@ export tag Sidebar
         window:location.assign '/'
 
     def change_page page
-        current_page = page
         window:location.assign "/#/{page}"
 
     def close
         trigger :close
 
     def render
-        console.log State:competicao
         <self>
             <div :tap.close .sa-backdrop> if toggle
             <aside .sidebar .toggled=(toggle)>
@@ -43,17 +43,17 @@ export tag Sidebar
                                 "Sair"
 
                     <ul .navigation>
-                        <li .navigation__active=(current_page == :placar)>
+                        <li .navigation__active=(window:location:hash == '#/placar')>
                             <a :tap=(do change_page(:placar))>
                                 <i .zmdi .zmdi-chart>
                                 " Placar"
 
-                        <li .navigation__active=(current_page == :equipes)>
+                        <li .navigation__active=(window:location:hash == '#/equipes')>
                             <a :tap=(do change_page(:equipes))>
                                 <i .zmdi .zmdi-format-list-bulleted>
                                 " Equipes"
 
-                        <li .navigation__active=(current_page == :competicoes)>
+                        <li .navigation__active=(window:location:hash == '#/competicoes')>
                             <a :tap=(do change_page(:competicoes))>
                                 <i .zmdi .zmdi-local-bar>
                                 " Competições"
