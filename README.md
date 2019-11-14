@@ -9,23 +9,29 @@ sudo service mysql start
 systemctl enable mysql
 ```
 
-##### Download e instalação
+##### Download
 ```git clone https://github.com/ODevBolsomito/projeto_fascista_opressor.git ccdc```
+##### Entra no diretório
 ```cd ccdc```
+##### Instala dependencias
 ```yarn```
+##### Inicia o MYSQL
 ```sudo service mysql start```
 
+##### Inicia a interface WEB
 ```yarn client```
+##### Inicia o servidor HTTP
 ```yarn server```
+##### Inicia o servidor MQTT e o Subscriber
 ```yarn mqtt```
-ou
+##### Inicia os 3 (Alternativa)
 ```yarn start```
 
-em build/ está o codigo JS compilado
-
-No src/firmware está o codigo da nodemcu
+Em ```build/``` está o codigo JS compilado
+Em ```src/firmware``` está o codigo da nodemcu
 É necessário alterar a configuração da rede
-
+```
 ssid
 password
 mqtt_server
+```
